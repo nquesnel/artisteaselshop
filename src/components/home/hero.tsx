@@ -21,8 +21,8 @@ export function Hero() {
       />
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-warm-white via-warm-white/40 to-transparent" />
-      <div className="absolute inset-0 bg-charcoal/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/40 to-charcoal/20" />
+      <div className="absolute inset-0 bg-charcoal/30" />
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
