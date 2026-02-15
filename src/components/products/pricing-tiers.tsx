@@ -16,16 +16,17 @@ interface PricingTiersProps {
 // ---------------------------------------------------------------------------
 
 function computeTierPrice(tier: BulkPricingTier, basePrice: number): number {
-  switch (tier.type) {
-    case "PERCENT_OFF":
-      return basePrice * (1 - tier.discount / 100);
-    case "PRICE_OFF":
-      return basePrice - tier.discount;
-    case "FIXED":
-      return tier.discount;
-    default:
-      return basePrice;
+  if (tier.price != null) {
+    // Fixed price discount — replaces unit price entirely
+    return tier.price;
   }
+  if (tier.percentOff != null) {
+    return basePrice * (1 - tier.percentOff / 100);
+  }
+  if (tier.priceAdjustment != null) {
+    return basePrice - tier.priceAdjustment;
+  }
+  return basePrice;
 }
 
 function computeSavePercent(tierPrice: number, basePrice: number): number {

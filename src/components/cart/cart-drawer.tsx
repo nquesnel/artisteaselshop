@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -194,7 +194,26 @@ export function CartDrawer() {
   const closeCart = useCartStore((s) => s.closeCart);
   const items = useCartStore((s) => s.items);
   const subtotal = useCartStore((s) => s.subtotal);
+  const fetchCart = useCartStore((s) => s.fetchCart);
+  const checkout = useCartStore((s) => s.checkout);
   const panelRef = useRef<HTMLElement>(null);
+  const [checkingOut, setCheckingOut] = useState(false);
+
+  // Hydrate cart from BigCommerce on first mount
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  const handleCheckout = useCallback(async () => {
+    setCheckingOut(true);
+    const url = await checkout();
+    if (url) {
+      window.location.href = url;
+    } else {
+      setCheckingOut(false);
+      alert("Could not start checkout. Please try again.");
+    }
+  }, [checkout]);
 
   // Lock body scroll when drawer is open -----------------------------------
   useEffect(() => {
@@ -349,13 +368,14 @@ export function CartDrawer() {
 
                   {/* Buttons */}
                   <div className="flex flex-col gap-3">
-                    <Link
-                      href="/cart/checkout"
-                      onClick={closeCart}
-                      className="flex items-center justify-center rounded-lg bg-terracotta px-8 py-3.5 text-[15px] font-medium text-white shadow-soft transition-all hover:bg-terracotta-dark hover:shadow-medium"
+                    <button
+                      type="button"
+                      onClick={handleCheckout}
+                      disabled={checkingOut}
+                      className="flex items-center justify-center rounded-lg bg-terracotta px-8 py-3.5 text-[15px] font-medium text-white shadow-soft transition-all hover:bg-terracotta-dark hover:shadow-medium disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Checkout
-                    </Link>
+                      {checkingOut ? "Redirecting..." : "Checkout"}
+                    </button>
                     <button
                       type="button"
                       onClick={closeCart}

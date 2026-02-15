@@ -59,12 +59,12 @@ export interface Prices {
 export interface BulkPricingTier {
   minimumQuantity: number;
   maximumQuantity: number | null;
-  /** Absolute discount amount, percentage, or fixed price depending on type */
-  discount: number;
-  /**
-   * PERCENT_OFF | PRICE_OFF | FIXED
-   */
-  type: "PERCENT_OFF" | "PRICE_OFF" | "FIXED";
+  /** Fixed price discount (replaces unit price) */
+  price?: number;
+  /** Percentage off base price */
+  percentOff?: number;
+  /** Absolute price reduction */
+  priceAdjustment?: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -212,7 +212,6 @@ export interface Category {
   name: string;
   path: string;
   description: string;
-  productCount: number;
   image: {
     url: string;
     altText: string;
@@ -224,7 +223,6 @@ export interface CategoryTreeItem {
   name: string;
   path: string;
   description: string;
-  productCount: number;
   image: {
     url: string;
     altText: string;

@@ -18,31 +18,16 @@ export const GET_CATEGORY_TREE = /* GraphQL */ `
         name
         path
         description
-        productCount
-        image {
-          url(width: 400, height: 400)
-          altText
-        }
         children {
           entityId
           name
           path
           description
-          productCount
-          image {
-            url(width: 400, height: 400)
-            altText
-          }
           children {
             entityId
             name
             path
             description
-            productCount
-            image {
-              url(width: 400, height: 400)
-              altText
-            }
           }
         }
       }
@@ -58,14 +43,12 @@ export const GET_CATEGORY_TREE = /* GraphQL */ `
  *   - path: String! (e.g. "/easels/")
  *   - first: Int (default 12)
  *   - after: String
- *   - sort: ProductSortInput
  */
 export const GET_CATEGORY_BY_PATH = /* GraphQL */ `
   query GetCategoryByPath(
     $path: String!
     $first: Int = 12
     $after: String
-    $sort: ProductSortInput
   ) {
     site {
       route(path: $path) {
@@ -75,12 +58,7 @@ export const GET_CATEGORY_BY_PATH = /* GraphQL */ `
             name
             path
             description
-            productCount
-            image {
-              url(width: 800, height: 400)
-              altText
-            }
-            products(first: $first, after: $after, sortBy: $sort) {
+            products(first: $first, after: $after) {
               pageInfo {
                 hasNextPage
                 hasPreviousPage

@@ -39,8 +39,15 @@ export const PRODUCT_FIELDS = /* GraphQL */ `
       bulkPricing {
         minimumQuantity
         maximumQuantity
-        discount
-        type
+        ... on BulkPricingFixedPriceDiscount {
+          price
+        }
+        ... on BulkPricingPercentageDiscount {
+          percentOff
+        }
+        ... on BulkPricingRelativePriceDiscount {
+          priceAdjustment
+        }
       }
     }
     brand {
@@ -110,8 +117,15 @@ export const PRODUCT_DETAIL_FIELDS = /* GraphQL */ `
       bulkPricing {
         minimumQuantity
         maximumQuantity
-        discount
-        type
+        ... on BulkPricingFixedPriceDiscount {
+          price
+        }
+        ... on BulkPricingPercentageDiscount {
+          percentOff
+        }
+        ... on BulkPricingRelativePriceDiscount {
+          priceAdjustment
+        }
       }
     }
     brand {
@@ -188,8 +202,6 @@ export const PRODUCT_DETAIL_FIELDS = /* GraphQL */ `
             bulkPricing {
               minimumQuantity
               maximumQuantity
-              discount
-              type
             }
           }
           options(first: 50) {
@@ -246,8 +258,6 @@ export const PRODUCT_DETAIL_FIELDS = /* GraphQL */ `
             bulkPricing {
               minimumQuantity
               maximumQuantity
-              discount
-              type
             }
           }
           brand {

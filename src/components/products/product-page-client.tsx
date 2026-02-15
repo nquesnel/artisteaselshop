@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useCartStore } from "@/stores/cart-store";
 import { ProductInfo } from "@/components/products/product-info";
 
@@ -31,19 +32,15 @@ interface ProductForCart {
 }
 
 export function ProductPageClient({ product }: { product: ProductForCart }) {
-  const { addItem, openCart } = useCartStore();
+  const { addItem, openCart, fetchCart } = useCartStore();
 
-  function handleAddToCart(quantity: number) {
-    addItem({
-      entityId: `product-${product.entityId}-${Date.now()}`,
-      productEntityId: product.entityId,
-      name: product.name,
-      quantity,
-      price: product.prices.price.value,
-      salePrice: product.prices.salePrice?.value,
-      imageUrl: product.defaultImage?.url,
-      path: product.path,
-    });
+  // Hydrate cart from server on mount
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  async function handleAddToCart(quantity: number) {
+    await addItem(product.entityId, quantity);
     openCart();
   }
 

@@ -2,58 +2,64 @@ import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { bigcommerceGQL } from "@/lib/bigcommerce/client";
+import { GET_CATEGORY_TREE } from "@/lib/bigcommerce/queries/categories";
+import type { GetCategoryTreeResponse, CategoryTreeItem } from "@/lib/bigcommerce/types";
 
 export const metadata = {
   title: "Collections",
   description: "Browse our curated collections of premium easels, brushes, paints, and studio supplies.",
 };
 
-const COLLECTIONS = [
-  {
-    name: "Easels",
-    slug: "easels",
-    description: "From compact tabletop easels to heavy-duty H-frames, find the perfect support for your work.",
+/** Fallback images & descriptions for categories (Unsplash) */
+const CATEGORY_META: Record<string, { image: string; description: string }> = {
+  easels: {
     image: "https://images.unsplash.com/photo-1747311585699-d7a659864cac?w=800&h=600&fit=crop",
-    count: 24,
+    description: "From compact tabletop easels to heavy-duty H-frames, find the perfect support for your work.",
   },
-  {
-    name: "Brushes & Tools",
-    slug: "brushes-tools",
-    description: "Professional-grade brushes, palette knives, and essential tools for every medium.",
+  "brushes-tools": {
     image: "https://images.unsplash.com/photo-1758522276630-8ebdf55d7619?w=800&h=600&fit=crop",
-    count: 36,
+    description: "Professional-grade brushes, palette knives, and essential tools for every medium.",
   },
-  {
-    name: "Paints & Mediums",
-    slug: "paints-mediums",
-    description: "Artist-quality oils, acrylics, watercolors, and specialty mediums.",
+  "paints-mediums": {
     image: "https://images.unsplash.com/photo-1752649937266-1900d9e176c3?w=800&h=600&fit=crop",
-    count: 48,
+    description: "Artist-quality oils, acrylics, watercolors, and specialty mediums.",
   },
-  {
-    name: "Canvas & Surfaces",
-    slug: "canvas-surfaces",
-    description: "Premium stretched canvases, wood panels, and specialty papers for every technique.",
+  "canvas-surfaces": {
     image: "https://images.unsplash.com/photo-1580493113011-ad79f792a7c2?w=800&h=600&fit=crop",
-    count: 18,
+    description: "Premium stretched canvases, wood panels, and specialty papers for every technique.",
   },
-  {
-    name: "Studio Furniture",
-    slug: "studio-furniture",
-    description: "Taborets, storage solutions, and furniture designed for the working artist.",
+  "studio-furniture": {
     image: "https://images.unsplash.com/photo-1763793426538-db411c27894d?w=800&h=600&fit=crop",
-    count: 12,
+    description: "Taborets, storage solutions, and furniture designed for the working artist.",
   },
-  {
-    name: "Gift Sets",
-    slug: "gift-sets",
-    description: "Curated sets for the aspiring artist or the seasoned professional.",
+  "gift-sets": {
     image: "https://images.unsplash.com/photo-1731958508590-2283b294e607?w=800&h=600&fit=crop",
-    count: 8,
+    description: "Curated sets for the aspiring artist or the seasoned professional.",
   },
-];
+};
 
-export default function CollectionsPage() {
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1580493113011-ad79f792a7c2?w=800&h=600&fit=crop";
+
+/** Flatten category tree into a list of top-level categories */
+function flattenTree(tree: CategoryTreeItem[]): CategoryTreeItem[] {
+  return tree;
+}
+
+export default async function CollectionsPage() {
+  let categories: CategoryTreeItem[] = [];
+
+  try {
+    const data = await bigcommerceGQL<GetCategoryTreeResponse>(
+      GET_CATEGORY_TREE,
+      {},
+      { revalidate: 3600 },
+    );
+    categories = flattenTree(data.site.categoryTree);
+  } catch {
+    // Fall back to empty — the page will show a message
+  }
+
   return (
     <>
       <Header />
@@ -72,37 +78,47 @@ export default function CollectionsPage() {
 
           {/* Collections grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {COLLECTIONS.map((collection) => (
-              <Link
-                key={collection.slug}
-                href={`/collections/${collection.slug}`}
-                className="group block rounded-lg overflow-hidden border border-stone-200 bg-warm-white shadow-soft hover:shadow-medium transition-all duration-300"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={collection.image}
-                    alt={`${collection.name} collection - ${collection.description}`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center justify-between mb-2">
-                    <h2 className="font-heading text-xl text-charcoal group-hover:text-terracotta transition-colors">
-                      {collection.name}
-                    </h2>
-                    <span className="text-[12px] text-stone-400 font-medium">
-                      {collection.count} items
-                    </span>
+            {categories.map((cat) => {
+              const slug = cat.path.replace(/^\/|\/$/g, "");
+              const meta = CATEGORY_META[slug];
+              const image = meta?.image ?? DEFAULT_IMAGE;
+              const description = meta?.description ?? cat.description ?? "";
+
+              return (
+                <Link
+                  key={cat.entityId}
+                  href={`/collections/${slug}`}
+                  className="group block rounded-lg overflow-hidden border border-stone-200 bg-warm-white shadow-soft hover:shadow-medium transition-all duration-300"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <Image
+                      src={image}
+                      alt={`${cat.name} collection`}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                   </div>
-                  <p className="text-[14px] text-stone-600 leading-relaxed">
-                    {collection.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
+                  <div className="p-5">
+                    <h2 className="font-heading text-xl text-charcoal group-hover:text-terracotta transition-colors mb-2">
+                      {cat.name}
+                    </h2>
+                    {description && (
+                      <p className="text-[14px] text-stone-600 leading-relaxed">
+                        {description}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
+
+          {categories.length === 0 && (
+            <p className="text-center text-stone-500 text-[15px] py-12">
+              Collections are loading. Please check back shortly.
+            </p>
+          )}
         </div>
       </main>
       <Footer />

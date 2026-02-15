@@ -4,17 +4,75 @@ import { Footer } from "@/components/layout/footer";
 import { ProductGrid } from "@/components/products/product-grid";
 import { ProductFilters } from "@/components/products/product-filters";
 import Link from "next/link";
-import { CATEGORIES, getProductsByCategory } from "@/lib/sample-products";
+import { bigcommerceGQL } from "@/lib/bigcommerce/client";
+import { GET_CATEGORY_BY_PATH } from "@/lib/bigcommerce/queries/categories";
+import type { GetCategoryByPathResponse, ProductSummary } from "@/lib/bigcommerce/types";
 
-export function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  return params.then(({ slug }) => {
-    const category = CATEGORIES[slug];
-    if (!category) return { title: "Not Found" };
-    return {
-      title: category.name,
-      description: category.description,
-    };
-  });
+// Fallback category metadata in case BC descriptions are empty
+const CATEGORY_META: Record<string, { name: string; description: string }> = {
+  easels: {
+    name: "Easels",
+    description:
+      "From compact tabletop easels to heavy-duty H-frames, find the perfect support for your work.",
+  },
+  "brushes-tools": {
+    name: "Brushes & Tools",
+    description:
+      "Professional-grade brushes, palette knives, and essential tools for every medium.",
+  },
+  "paints-mediums": {
+    name: "Paints & Mediums",
+    description:
+      "Artist-quality oils, acrylics, watercolors, and specialty mediums.",
+  },
+  "canvas-surfaces": {
+    name: "Canvas & Surfaces",
+    description:
+      "Premium stretched canvases, wood panels, and specialty papers for every technique.",
+  },
+  "studio-furniture": {
+    name: "Studio Furniture",
+    description:
+      "Taborets, storage solutions, and furniture designed for the working artist.",
+  },
+  "gift-sets": {
+    name: "Gift Sets",
+    description:
+      "Curated sets for the aspiring artist or the seasoned professional.",
+  },
+};
+
+/** Convert a BigCommerce product path (e.g. "/products/chevalet-grand-h-frame/") to our frontend path */
+function toFrontendPath(bcPath: string): string {
+  // BC paths already include /products/ prefix — just strip trailing slash
+  return bcPath.replace(/\/+$/, "");
+}
+
+/** Transform BC ProductSummary to the shape ProductCard expects */
+function toCardProduct(p: ProductSummary) {
+  return {
+    entityId: p.entityId,
+    name: p.name,
+    path: toFrontendPath(p.path),
+    plainTextDescription: p.plainTextDescription,
+    defaultImage: p.defaultImage,
+    prices: p.prices,
+    brand: p.brand,
+  };
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const meta = CATEGORY_META[slug];
+  if (!meta) return { title: "Collection" };
+  return {
+    title: meta.name,
+    description: meta.description,
+  };
 }
 
 export default async function CollectionPage({
@@ -23,13 +81,36 @@ export default async function CollectionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const category = CATEGORIES[slug];
 
-  if (!category) {
-    notFound();
+  // Try fetching the category + products from BigCommerce
+  let categoryName = CATEGORY_META[slug]?.name ?? slug;
+  let categoryDescription = CATEGORY_META[slug]?.description ?? "";
+  let products: ReturnType<typeof toCardProduct>[] = [];
+
+  try {
+    const data = await bigcommerceGQL<GetCategoryByPathResponse>(
+      GET_CATEGORY_BY_PATH,
+      { path: `/${slug}/`, first: 50 },
+      { revalidate: 300 },
+    );
+
+    const node = data.site.route?.node;
+    if (node) {
+      categoryName = node.name || categoryName;
+      if (node.description) categoryDescription = node.description;
+
+      products = (node.products?.edges ?? []).map((edge) =>
+        toCardProduct(edge.node),
+      );
+    }
+  } catch (err) {
+    console.error(`[Collection] Failed to fetch from BigCommerce:`, err);
   }
 
-  const products = getProductsByCategory(slug);
+  // If no products found and no matching category, show 404
+  if (products.length === 0 && !CATEGORY_META[slug]) {
+    notFound();
+  }
 
   return (
     <>
@@ -55,7 +136,7 @@ export default async function CollectionPage({
               </li>
               <li aria-hidden="true">/</li>
               <li aria-current="page">
-                <span className="text-terracotta">{category.name}</span>
+                <span className="text-terracotta">{categoryName}</span>
               </li>
             </ol>
           </nav>
@@ -63,11 +144,13 @@ export default async function CollectionPage({
           {/* Category header */}
           <div className="mb-8">
             <h1 className="font-heading text-4xl sm:text-5xl text-charcoal">
-              {category.name}
+              {categoryName}
             </h1>
-            <p className="mt-3 text-[15px] text-stone-600 max-w-2xl">
-              {category.description}
-            </p>
+            {categoryDescription && (
+              <p className="mt-3 text-[15px] text-stone-600 max-w-2xl">
+                {categoryDescription}
+              </p>
+            )}
           </div>
 
           {/* Filters */}

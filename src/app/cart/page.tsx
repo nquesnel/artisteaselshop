@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useCartStore } from "@/stores/cart-store";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -14,8 +15,26 @@ function formatCurrency(value: number) {
 }
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, subtotal } = useCartStore();
+  const { items, updateQuantity, removeItem, subtotal, fetchCart, checkout } =
+    useCartStore();
   const total = subtotal();
+  const [checkingOut, setCheckingOut] = useState(false);
+
+  // Hydrate cart from BigCommerce on mount
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  async function handleCheckout() {
+    setCheckingOut(true);
+    const url = await checkout();
+    if (url) {
+      window.location.href = url;
+    } else {
+      setCheckingOut(false);
+      alert("Could not start checkout. Please try again.");
+    }
+  }
 
   return (
     <>
@@ -117,7 +136,7 @@ export default function CartPage() {
                             onClick={() =>
                               updateQuantity(
                                 item.entityId,
-                                item.quantity - 1
+                                item.quantity - 1,
                               )
                             }
                             aria-label={`Decrease quantity of ${item.name}`}
@@ -125,14 +144,17 @@ export default function CartPage() {
                           >
                             <span aria-hidden="true">&minus;</span>
                           </button>
-                          <span className="w-8 text-center text-[14px] font-medium tabular-nums" aria-label={`Quantity: ${item.quantity}`}>
+                          <span
+                            className="w-8 text-center text-[14px] font-medium tabular-nums"
+                            aria-label={`Quantity: ${item.quantity}`}
+                          >
                             {item.quantity}
                           </span>
                           <button
                             onClick={() =>
                               updateQuantity(
                                 item.entityId,
-                                item.quantity + 1
+                                item.quantity + 1,
                               )
                             }
                             aria-label={`Increase quantity of ${item.name}`}
@@ -154,7 +176,7 @@ export default function CartPage() {
                       <div className="col-span-4 sm:col-span-2 text-right">
                         <span className="text-[14px] font-medium text-charcoal tabular-nums">
                           {formatCurrency(
-                            (item.salePrice ?? item.price) * item.quantity
+                            (item.salePrice ?? item.price) * item.quantity,
                           )}
                         </span>
                       </div>
@@ -198,8 +220,12 @@ export default function CartPage() {
                     </span>
                   </div>
 
-                  <button className="mt-6 w-full bg-terracotta text-white font-medium rounded-lg px-6 py-3.5 text-[15px] hover:bg-terracotta-dark transition-colors">
-                    Proceed to Checkout
+                  <button
+                    onClick={handleCheckout}
+                    disabled={checkingOut}
+                    className="mt-6 w-full bg-terracotta text-white font-medium rounded-lg px-6 py-3.5 text-[15px] hover:bg-terracotta-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {checkingOut ? "Redirecting..." : "Proceed to Checkout"}
                   </button>
 
                   <Link

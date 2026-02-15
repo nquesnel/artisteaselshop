@@ -18,19 +18,11 @@ export const GET_PRODUCTS = /* GraphQL */ `
   query GetProducts(
     $first: Int = 12
     $after: String
-    $sort: ProductSortInput
-    $categoryEntityId: Int
-    $brandEntityIds: [Int!]
   ) {
     site {
       products(
         first: $first
         after: $after
-        sortBy: $sort
-        condition: {
-          categoryEntityId: $categoryEntityId
-          brandEntityIds: $brandEntityIds
-        }
       ) {
         pageInfo {
           hasNextPage

@@ -105,14 +105,16 @@ export async function bigcommerceGQL<T>(
 
   const response = await fetch(STOREFRONT_API_URL, fetchOptions);
 
+  const json: GraphQLResponse<T> = await response.json();
+
   if (!response.ok) {
+    const errMessages = json.errors?.map((e) => e.message).join("; ") ?? "";
     throw new BigCommerceAPIError(
-      `BigCommerce Storefront API error: ${response.status} ${response.statusText}`,
-      response.status
+      `BigCommerce Storefront API error: ${response.status} ${response.statusText} - ${errMessages}`,
+      response.status,
+      json.errors ?? []
     );
   }
-
-  const json: GraphQLResponse<T> = await response.json();
 
   if (json.errors && json.errors.length > 0) {
     const messages = json.errors.map((e) => e.message).join("; ");
