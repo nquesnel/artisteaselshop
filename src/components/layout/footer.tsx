@@ -136,14 +136,6 @@ function Footer() {
                   Request a Quote
                 </Link>
               </li>
-              <li>
-                <a
-                  href="mailto:hello@artisteaselshop.com"
-                  className="font-body text-[15px] text-stone-600 hover:text-terracotta transition-colors"
-                >
-                  hello@artisteaselshop.com
-                </a>
-              </li>
             </ul>
             <p className="mt-4 font-body text-[13px] text-stone-400 leading-relaxed">
               Dedicated support for educators and studio managers. Volume

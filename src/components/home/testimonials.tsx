@@ -6,22 +6,22 @@ const TESTIMONIALS = [
   {
     quote:
       "We outfitted three classrooms with their H-frame easels last fall. Bulk pricing saved us almost $2,000 and every single one arrived in perfect condition. Already reordering for the summer program.",
-    name: "Brenda Kowalski",
-    title: "Art Dept. Head, Westfield Community College",
+    name: "Brenda K.",
+    title: "College Art Department",
     initials: "BK",
   },
   {
     quote:
       "I&apos;ve been painting professionally for 22 years and I&apos;m very particular about my setup. This is the first easel I&apos;ve owned that I genuinely don&apos;t want to replace. Rock solid.",
-    name: "Tom Nardelli",
+    name: "Tom N.",
     title: "Oil Painter, Hudson Valley NY",
     initials: "TN",
   },
   {
     quote:
       "The quote process was painless &mdash; I sent a list of what we needed on Monday, had pricing by Wednesday, and everything shipped within the week. Night and day from our old supplier.",
-    name: "Liz Okafor-Hughes",
-    title: "Studio Manager, Firebrand Arts Collective",
+    name: "Liz O.",
+    title: "Studio Manager",
     initials: "LO",
   },
 ];

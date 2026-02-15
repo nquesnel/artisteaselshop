@@ -18,11 +18,11 @@ const CATEGORY_META: Record<string, { image: string; description: string }> = {
     description: "From compact tabletop easels to heavy-duty H-frames, find the perfect support for your work.",
   },
   "brushes-tools": {
-    image: "https://images.unsplash.com/photo-1758522276630-8ebdf55d7619?w=800&h=600&fit=crop",
+    image: "/images/collection-brushes-tools.jpg",
     description: "Professional-grade brushes, palette knives, and essential tools for every medium.",
   },
   "paints-mediums": {
-    image: "https://images.unsplash.com/photo-1752649937266-1900d9e176c3?w=800&h=600&fit=crop",
+    image: "/images/collection-paints-mediums.jpg",
     description: "Artist-quality oils, acrylics, watercolors, and specialty mediums.",
   },
   "canvas-surfaces": {

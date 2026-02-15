@@ -15,13 +15,13 @@ const COLLECTIONS = [
     name: "Brushes & Tools",
     slug: "brushes-tools",
     description: "Professional grade bristles",
-    image: "https://images.unsplash.com/photo-1758522276630-8ebdf55d7619?w=600&h=750&fit=crop",
+    image: "/images/collection-brushes-tools.jpg",
   },
   {
     name: "Paints & Mediums",
     slug: "paints-mediums",
     description: "Oils, acrylics & watercolors",
-    image: "https://images.unsplash.com/photo-1752649937266-1900d9e176c3?w=600&h=750&fit=crop",
+    image: "/images/collection-paints-mediums.jpg",
   },
   {
     name: "Canvas & Surfaces",
