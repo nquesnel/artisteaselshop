@@ -5,24 +5,24 @@ import { motion } from "framer-motion";
 const TESTIMONIALS = [
   {
     quote:
-      "The quality of easels from Artist Easel Shop is unmatched. We&apos;ve outfitted our entire painting department and the bulk pricing saved us thousands.",
-    name: "Dr. Sarah Chen",
-    title: "Department Chair, School of Visual Arts",
-    initials: "SC",
+      "We outfitted three classrooms with their H-frame easels last fall. Bulk pricing saved us almost $2,000 and every single one arrived in perfect condition. Already reordering for the summer program.",
+    name: "Brenda Kowalski",
+    title: "Art Dept. Head, Westfield Community College",
+    initials: "BK",
   },
   {
     quote:
-      "As a professional artist, I need equipment I can rely on. Their studio easels are built to last and the customer service is exceptional.",
-    name: "Marcus Rivera",
-    title: "Professional Artist & Instructor",
-    initials: "MR",
+      "I&apos;ve been painting professionally for 22 years and I&apos;m very particular about my setup. This is the first easel I&apos;ve owned that I genuinely don&apos;t want to replace. Rock solid.",
+    name: "Tom Nardelli",
+    title: "Oil Painter, Hudson Valley NY",
+    initials: "TN",
   },
   {
     quote:
-      "We switched our entire studio supply chain to Artist Easel Shop. The NET-30 terms and dedicated account manager make it effortless.",
-    name: "Jennifer Park",
-    title: "Director, Riverside Art Academy",
-    initials: "JP",
+      "The quote process was painless &mdash; I sent a list of what we needed on Monday, had pricing by Wednesday, and everything shipped within the week. Night and day from our old supplier.",
+    name: "Liz Okafor-Hughes",
+    title: "Studio Manager, Firebrand Arts Collective",
+    initials: "LO",
   },
 ];
 

@@ -138,10 +138,10 @@ function Footer() {
               </li>
               <li>
                 <a
-                  href="tel:+18005551234"
+                  href="mailto:hello@artisteaselshop.com"
                   className="font-body text-[15px] text-stone-600 hover:text-terracotta transition-colors"
                 >
-                  (800) 555-1234
+                  hello@artisteaselshop.com
                 </a>
               </li>
             </ul>
