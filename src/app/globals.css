@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary palette */
+  --color-charcoal: #2C2C2C;
+  --color-warm-white: #FAF8F5;
+  --color-cream: #F5F0EB;
+  --color-terracotta: #C4623A;
+  --color-terracotta-dark: #A84E2B;
+  --color-terracotta-light: #D4815E;
+  --color-sage: #7A8B6F;
+  --color-sage-dark: #5F6F54;
+  --color-sage-light: #94A588;
+
+  /* Stone neutrals */
+  --color-stone-50: #FAFAF8;
+  --color-stone-100: #F7F5F2;
+  --color-stone-200: #EDE9E3;
+  --color-stone-300: #D6CFC6;
+  --color-stone-400: #B8AFA3;
+  --color-stone-500: #8A8078;
+  --color-stone-600: #6B6158;
+  --color-stone-700: #4A4239;
+  --color-stone-800: #332D26;
+  --color-stone-900: #1A1714;
+
+  /* Functional */
+  --color-success: #5B8C5A;
+  --color-warning: #D4A843;
+  --color-error: #C44B3A;
+
+  /* Typography */
+  --font-heading: "Playfair Display", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-soft: 0 1px 3px rgba(44, 44, 44, 0.06), 0 1px 2px rgba(44, 44, 44, 0.04);
+  --shadow-medium: 0 4px 6px rgba(44, 44, 44, 0.07), 0 2px 4px rgba(44, 44, 44, 0.04);
+  --shadow-elevated: 0 10px 25px rgba(44, 44, 44, 0.08), 0 4px 10px rgba(44, 44, 44, 0.04);
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+  background-color: var(--color-warm-white);
+}
+
+/* Heading font family */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-terracotta);
+  color: white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-stone-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-stone-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-stone-400);
+}
+
+/* Canvas texture utility */
+.texture-canvas {
+  position: relative;
+}
+
+.texture-canvas::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/textures/canvas-subtle.png");
+  background-repeat: repeat;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Warm shimmer for skeletons */
+@keyframes warm-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-stone-200) 25%,
+    var(--color-stone-100) 50%,
+    var(--color-stone-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: warm-shimmer 1.5s ease-in-out infinite;
+}
+
+/* Tabular nums for prices */
+.price {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ========================================================================== */
+/* ADA / WCAG 2.1 AA Accessibility                                            */
+/* ========================================================================== */
+
+/* Skip to main content link ------------------------------------------------ */
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.skip-to-main:focus {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  width: auto;
+  height: auto;
+  padding: 12px 24px;
+  background-color: var(--color-charcoal);
+  color: var(--color-warm-white);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+  text-decoration: none;
+}
+
+/* Global focus-visible indicators ------------------------------------------ */
+*:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+}
+
+/* Remove default outline only when focus-visible handles it */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Reduced motion ----------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .skeleton-shimmer {
+    animation: none;
+  }
+}

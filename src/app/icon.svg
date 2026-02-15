@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Brush handle -->
+  <rect x="4" y="18" width="8" height="12" rx="2" fill="#C4623A"/>
+  <!-- Ferrule (metal band) -->
+  <rect x="3" y="15" width="10" height="4" rx="1" fill="#B8AFA3"/>
+  <!-- Bristles -->
+  <path d="M4 15 C4 8 5 3 8 1 C11 3 12 8 12 15Z" fill="#2C2C2C"/>
+  <!-- Bristle detail lines -->
+  <line x1="6" y1="4" x2="6" y2="14" stroke="#4A4239" stroke-width="0.5" opacity="0.4"/>
+  <line x1="8" y1="2" x2="8" y2="14" stroke="#4A4239" stroke-width="0.5" opacity="0.4"/>
+  <line x1="10" y1="4" x2="10" y2="14" stroke="#4A4239" stroke-width="0.5" opacity="0.4"/>
+  <!-- Paint dab on tip -->
+  <ellipse cx="8" cy="2" rx="3" ry="1.5" fill="#C4623A" opacity="0.8"/>
+</svg>
