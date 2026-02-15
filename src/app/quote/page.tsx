@@ -341,27 +341,15 @@ export default function QuotePage() {
                   ))}
                 </ul>
 
-                <div className="mt-8 pt-6 border-t border-stone-200">
-                  <p className="text-[13px] text-stone-500 mb-1">
-                    Prefer to talk directly?
-                  </p>
-                  <p className="text-[15px] font-medium text-charcoal">
-                    Call us at (800) 555-EASEL
-                  </p>
-                  <p className="text-[13px] text-stone-400 mt-1">
-                    Mon-Fri, 9am-5pm EST
-                  </p>
-                </div>
-
                 {/* Testimonial */}
-                <div className="mt-6 pt-6 border-t border-stone-200">
+                <div className="mt-8 pt-6 border-t border-stone-200">
                   <blockquote className="text-[13px] text-stone-600 italic leading-relaxed">
-                    &ldquo;Artist Easel Shop saved our department over $4,000 last
-                    year with their bulk pricing program. The quality is
-                    excellent.&rdquo;
+                    &ldquo;We outfitted three classrooms last fall. Bulk pricing
+                    saved us almost $2,000 and every single easel arrived in
+                    perfect condition.&rdquo;
                   </blockquote>
                   <p className="mt-2 text-[12px] text-stone-500">
-                    — Dr. Sarah Chen, School of Visual Arts
+                    — Brenda K., College Art Department
                   </p>
                 </div>
               </div>
