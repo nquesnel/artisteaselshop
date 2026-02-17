@@ -3,8 +3,8 @@ import Link from "next/link";
 const quickLinks = [
   { href: "/collections", label: "Shop All" },
   { href: "/collections/easels", label: "Easels" },
-  { href: "/collections/brushes", label: "Brushes" },
-  { href: "/collections/canvas", label: "Canvas" },
+  { href: "/collections/brushes-tools", label: "Brushes & Tools" },
+  { href: "/collections/canvas-surfaces", label: "Canvas & Surfaces" },
   { href: "/about", label: "About" },
   { href: "/about#contact", label: "Contact" },
 ];
